@@ -22,3 +22,12 @@ env:
 after_success:
   - codecov
   
+addons:
+  sonarcloud:
+    organization: "wintr02-github" # the key of the org you chose at step #3
+    token:
+      secure: 13308ec43645784128eec48e3fcc8035a67a592f # encrypted value of your token
+script:
+  # other script steps might be done before running the actual analysis
+  - sonar-scanner
+  
