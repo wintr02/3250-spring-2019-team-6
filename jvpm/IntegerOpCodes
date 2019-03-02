@@ -35,7 +35,7 @@ class IntegerOpCodes:
     def iconst_4(self):
         self.stack.append(4)
 
-    #Pushes 2 onto the stack
+    #Pushes 5 onto the stack
     def iconst_5(self):
         self.stack.append(5)
 
