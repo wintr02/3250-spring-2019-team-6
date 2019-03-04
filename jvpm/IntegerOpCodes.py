@@ -5,11 +5,11 @@ class IntegerOpCodes:
 
     #adds top two operands in the stack and returns the value
     def iadd(self):
-        return self.stack.pop() + self.stack.pop()
+        self.stack.append(self.stack.pop() + self.stack.pop())
 
     #Compares top two integer bits in the stack and returns the AND result
     def iand(self):
-        return self.stack.pop() & self.stack.pop()
+        self.stack.append(self.stack.pop() & self.stack.pop())
 
     #Pushes -1 onto the stack
     def iconst_m1(self):
