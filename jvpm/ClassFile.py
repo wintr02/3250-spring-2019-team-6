@@ -3,7 +3,7 @@ import unittest
 
 
 class ClassFile:
-    def __init__(self, file='jvpm/test.class'):
+    def __init__(self, file='jvpm/test2.class'):
         with open(file, 'rb') as binary_file:
             # the byte string being stored in self.data to be parsed
             self.data = binary_file.read()
@@ -19,11 +19,12 @@ class ClassFile:
             # self.cp_and_ic = self.interface_count + self.constant_pool
             # self.interface_table = self.get_interface_table()
             # self.field_count = self.get_field_count()
-            # self.cp_ic_fc = self.cp_and_ic + self.field_count
+            #self.cp_ic_fc = 207  = self.cp_and_ic + self.field_count
             # self.field_table = self.get_field_table()
-            # self.method_count = self.get_method_count()
-            # self.cp_ic_fc_mc = self.cp_ic_fc + self.method_count
-            # self.method_table = self.get_method_table()
+            #self.method_count = self.get_method_count()
+            #self.method_table = self.get_method_table()
+            #self.cp_ic_fc_mc = self.cp_ic_fc + len(self.method_table)
+
             # self.attribute_count = self.get_attribute_count()
             # self.attribute_table = self.get_attribute_table()
 
@@ -74,15 +75,14 @@ class ClassFile:
     #     # for i in range(self.field_count):
     #     #    field += format(self.data[i + 20 + self.cp_and_ic], '02X')
     #     return field
-    #
-    # def get_method_count(self):
-    #     return self.data[20 + self.cp_ic_fc] + self.data[21 + self.cp_ic_fc]
-    #
-    # def get_method_table(self):
-    #     method = self.data[22+self.cp_ic_fc:22+self.cp_ic_fc_mc]
-    #     # for i in range(self.method_count):
-    #     #    method += format(self.data[i + 22 + self.cp_ic_fc], '02X')
-    #     return method
+
+    def get_method_count(self):
+        return self.data[20 + self.cp_ic_fc] + self.data[21 + self.cp_ic_fc]
+
+    def get_method_table(self):
+        method = self.data[22+self.cp_ic_fc:22+self.cp_ic_fc+self.method_count]
+
+        return method
     #
     # def get_attribute_count(self):
     #     return self.data[22 + self.cp_ic_fc_mc] + self.data[23 + self.cp_ic_fc_mc]
@@ -93,7 +93,7 @@ class ClassFile:
     #     #    attribute += format(self.data[i + 24 + self.cp_ic_fc_mc], '02X')
     #     return attribute
     #
-    # def print_self(self):
+    def print_self(self):
     #     print(self)
     #     print("Magic: ", self.magic)
     #     print("Minor version: ", self.minor)
@@ -111,7 +111,7 @@ class ClassFile:
     #     print("Field table: ", "[%s]" % ", ".join(map(str, self.field_table)))
     #     print("Method count: ", self.method_count)
     #     print("Cp + IC + Fc + Mc: ", self.cp_ic_fc_mc)
-    #     print("Method table: ", "[%s]" % ", ".join(map(str, self.method_table)))
+        print("Method table: ",''.join("%02x"%i for i in self.method_table))
     #     print("Attribute count: ", self.attribute_count)
     #     print("Attribute table: ", "[%s]" % ", ".join(map(str, self.attribute_table)))
 
@@ -123,13 +123,90 @@ class ClassFile:
 class OpCodes:
     def __init__(self):
         self.table = {0x00: self.not_implemented}
+        self.stack = []
 
     def not_implemented(self):
         return 'not implemented'
 
     def interpret(self, value):
         return self.table[value]()
+    #adds top two operands in the stack and returns the value
+    def iadd(self):
+        self.stack.append(self.stack.pop() + self.stack.pop())
+    #Compares top two integer bits in the stack and returns the AND result
+    def iand(self):
+        self.stack.append(self.stack.pop() & self.stack.pop())
 
+    #Pushes -1 onto the stack
+    def iconst_m1(self):
+        self.stack.append(-1)
+
+    #Pushes 0 onto the stack
+    def iconst_0(self):
+        self.stack.append(0)
+
+    #Pushes 1 onto the stack
+    def iconst_1(self):
+        self.stack.append(1)
+
+    #Pushes 2 onto the stack
+    def iconst_2(self):
+        self.stack.append(2)
+
+    #Pushes 3 onto the stack
+    def iconst_3(self):
+        self.stack.append(3)
+
+    #Pushes 4 onto the stack
+    def iconst_4(self):
+        self.stack.append(4)
+
+    #Pushes 5 onto the stack
+    def iconst_5(self):
+        self.stack.append(5)
+
+    #Divides top two integers on the stack and pushes the integer answer
+    def idiv(self):
+        self.stack.append(self.stack.pop()//self.stack.pop())
+
+    #Multiplies top two integers on the stack and pushes the result to the stack
+    def imul(self):
+        self.stack.append(self.stack.pop()*self.stack.pop())
+
+    #Pushes the next integer on the stack *-1
+    def ineg(self):
+        self.stack.append(self.stack.pop() * (-1))
+
+    #Pushes bitwise int OR into the stack of the top two integers
+    def ior(self):
+        self.stack.append(self.stack.pop()|self.stack.pop())
+
+    #Pushes the remainder of the division of the top two integers in the stack
+    def irem(self):
+        self.stack.append(self.stack.pop()%self.stack.pop())
+
+    #Pushes the next integer on the stack back onto it after it was shifted left by the amount
+    #of the the second integer on the stack
+    def ishl(self):
+        self.stack.append(self.stack.pop()<<self.stack.pop())
+
+    #Pushes the next integer on the stack back onto it after it was arithmetically shifted right by the amount
+    #of the the second integer on the stack
+    def ishr(self):
+        self.stack.append(self.stack.pop()>>self.stack.pop())
+
+    #Pushes the result of the top two integers of the stack back onto the stack
+    def isub(self):
+        self.stack.append(self.stack.pop()-self.stack.pop())
+
+    #Pushes the next integer on the stack back onto it after it was logically shifted right by the amount
+    #of the the second integer on the stack
+    def iushr(self):
+        self.stack.append((self.stack.pop() % 0x100000000) >> self.stack.pop())#needs testing
+
+    #Pushes the exclusive OR result of the top two integers of the stack back onto the stack
+    def ixor(self):
+        self.stack.append(self.stack.pop() ^ self.stack.pop())
 
 # classy = ClassFile()
 # classy.print_self()
