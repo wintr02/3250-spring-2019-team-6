@@ -19,7 +19,7 @@
       <file leaf-file-name="ClassFile.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/jvpm/ClassFile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
+            <state relative-caret-position="1921">
               <caret line="113" column="76" selection-start-line="113" selection-start-column="76" selection-end-line="113" selection-end-column="76" />
             </state>
           </provider>
@@ -136,7 +136,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32960895" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32960895" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -165,10 +165,11 @@
     <entry file="file://$PROJECT_DIR$/jvpm/HelloWorld.py" />
     <entry file="file://$PROJECT_DIR$/jvpm/ClassFile.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
+        <state relative-caret-position="1921">
           <caret line="113" column="76" selection-start-line="113" selection-start-column="76" selection-end-line="113" selection-end-column="76" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/jvpm/HelloWorld.py" />
   </component>
 </project>
