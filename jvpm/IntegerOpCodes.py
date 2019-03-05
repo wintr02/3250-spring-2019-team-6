@@ -39,3 +39,45 @@ class IntegerOpCodes:
     def iconst_5(self):
         self.stack.append(5)
 
+    #Divides top two integers on the stack and pushes the integer answer
+    def idiv(self):
+        self.stack.append(self.stack.pop()//self.stack.pop())
+
+    #Multiplies top two integers on the stack and pushes the result to the stack
+    def imul(self):
+        self.stack.append(self.stack.pop()*self.stack.pop())
+
+    #Pushes the next integer on the stack *-1
+    def ineg(self):
+        self.stack.append(self.stack.pop() * (-1))
+
+    #Pushes bitwise int OR into the stack of the top two integers
+    def ior(self):
+        self.stack.append(self.stack.pop()|self.stack.pop())
+
+    #Pushes the remainder of the division of the top two integers in the stack
+    def irem(self):
+        self.stack.append(self.stack.pop()%self.stack.pop())
+
+    #Pushes the next integer on the stack back onto it after it was shifted left by the amount
+    #of the the second integer on the stack
+    def ishl(self):
+        self.stack.append(self.stack.pop()<<self.stack.pop())
+
+    #Pushes the next integer on the stack back onto it after it was arithmetically shifted right by the amount
+    #of the the second integer on the stack
+    def ishr(self):
+        self.stack.append(self.stack.pop()>>self.stack.pop())
+
+    #Pushes the result of the top two integers of the stack back onto the stack
+    def isub(self):
+        self.stack.append(self.stack.pop()-self.stack.pop())
+
+    #Pushes the next integer on the stack back onto it after it was logically shifted right by the amount
+    #of the the second integer on the stack
+    def iushr(self):
+        self.stack.append((self.stack.pop() % 0x100000000) >> self.stack.pop())#needs testing
+
+    #Pushes the exclusive OR result of the top two integers of the stack back onto the stack
+    def ixor(self):
+        self.stack.append(self.stack.pop() ^ self.stack.pop())
