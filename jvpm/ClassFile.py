@@ -3,7 +3,7 @@ import unittest
 
 
 class ClassFile:
-    def __init__(self, file='jvpm/test.class'):
+    def __init__(self, file='jvpm/test2.class'):
         with open(file, 'rb') as binary_file:
             # the byte string being stored in self.data to be parsed
             self.data = binary_file.read()
@@ -19,11 +19,12 @@ class ClassFile:
             # self.cp_and_ic = self.interface_count + self.constant_pool
             # self.interface_table = self.get_interface_table()
             # self.field_count = self.get_field_count()
-            # self.cp_ic_fc = self.cp_and_ic + self.field_count
+            self.cp_ic_fc = 207 # = self.cp_and_ic + self.field_count
             # self.field_table = self.get_field_table()
-            # self.method_count = self.get_method_count()
-            # self.cp_ic_fc_mc = self.cp_ic_fc + self.method_count
-            # self.method_table = self.get_method_table()
+            self.method_count = self.get_method_count()
+            self.method_table = self.get_method_table()
+            self.cp_ic_fc_mc = self.cp_ic_fc + len(self.method_table)
+
             # self.attribute_count = self.get_attribute_count()
             # self.attribute_table = self.get_attribute_table()
 
@@ -74,15 +75,14 @@ class ClassFile:
     #     # for i in range(self.field_count):
     #     #    field += format(self.data[i + 20 + self.cp_and_ic], '02X')
     #     return field
-    #
-    # def get_method_count(self):
-    #     return self.data[20 + self.cp_ic_fc] + self.data[21 + self.cp_ic_fc]
-    #
-    # def get_method_table(self):
-    #     method = self.data[22+self.cp_ic_fc:22+self.cp_ic_fc_mc]
-    #     # for i in range(self.method_count):
-    #     #    method += format(self.data[i + 22 + self.cp_ic_fc], '02X')
-    #     return method
+
+    def get_method_count(self):
+        return self.data[20 + self.cp_ic_fc] + self.data[21 + self.cp_ic_fc]
+
+    def get_method_table(self):
+        method = self.data[22+self.cp_ic_fc:22+self.cp_ic_fc+self.method_count]
+
+        return method
     #
     # def get_attribute_count(self):
     #     return self.data[22 + self.cp_ic_fc_mc] + self.data[23 + self.cp_ic_fc_mc]
@@ -93,7 +93,7 @@ class ClassFile:
     #     #    attribute += format(self.data[i + 24 + self.cp_ic_fc_mc], '02X')
     #     return attribute
     #
-    # def print_self(self):
+    def print_self(self):
     #     print(self)
     #     print("Magic: ", self.magic)
     #     print("Minor version: ", self.minor)
@@ -111,7 +111,7 @@ class ClassFile:
     #     print("Field table: ", "[%s]" % ", ".join(map(str, self.field_table)))
     #     print("Method count: ", self.method_count)
     #     print("Cp + IC + Fc + Mc: ", self.cp_ic_fc_mc)
-    #     print("Method table: ", "[%s]" % ", ".join(map(str, self.method_table)))
+        print("Method table: ",''.join("%02x"%i for i in self.method_table))
     #     print("Attribute count: ", self.attribute_count)
     #     print("Attribute table: ", "[%s]" % ", ".join(map(str, self.attribute_table)))
 
@@ -134,6 +134,7 @@ class OpCodes:
     def iadd(self):
         self.stack.append(self.stack.pop() + self.stack.pop())
 
+<<<<<<< HEAD
     #Compares top two integer bits in the stack and returns the AND result
     def iand(self):
         self.stack.append(self.stack.pop() & self.stack.pop())
@@ -211,3 +212,7 @@ class OpCodes:
 
 # classy = ClassFile()
 # classy.print_self()
+=======
+classy = ClassFile()
+classy.print_self()
+>>>>>>> fdc79b9d3670b02c2fc560ad0e8d9b179993adb5
