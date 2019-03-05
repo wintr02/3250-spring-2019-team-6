@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import mock_open, patch
-from jvpm.ClassFile import OpCodes
+from ClassFile import OpCodes
 
 
 class TestOpCodes(unittest.TestCase):
@@ -21,7 +21,7 @@ class TestOpCodes(unittest.TestCase):
 	    test2.imul()             # Pops first two operands off stack and multiplies them and pushes X*Y
 	    self.assertEqual(test2.stack.pop(), 8) # Tests for correct X*Y on stack
     def test_ineg_simple(self):
-	    test3 = OpCodes()       
+	    test3 = OpCodes()
 	    test3.stack.append(5)    # Pushes X onto the stack
 	    test3.ineg()             # Negates X
 	    self.assertEqual(test3.stack.pop(), -5) # Tests for -X pn stack
@@ -30,7 +30,7 @@ class TestOpCodes(unittest.TestCase):
 	    test4.stack.append(6)    # Pushes Y onto the stack
 	    test4.stack.append(2)    # Pushes X onto the stack
 	    test4.ior()              # Pops first two operands off stack and does bitwise OR between them
-	    self.assertEqual(test4.stack.pop(), 7) # Tests for correct X OR Y on stack
+	    self.assertEqual(test4.stack.pop(), 6) # Tests for correct X OR Y on stack
     def test_irem_simple(self):
 	    test5 = OpCodes()
 	    test5.stack.append(3)    # Pushes Y onto the stack
