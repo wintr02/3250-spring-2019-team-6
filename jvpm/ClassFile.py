@@ -133,8 +133,6 @@ class OpCodes:
     #adds top two operands in the stack and returns the value
     def iadd(self):
         self.stack.append(self.stack.pop() + self.stack.pop())
-
-<<<<<<< HEAD
     #Compares top two integer bits in the stack and returns the AND result
     def iand(self):
         self.stack.append(self.stack.pop() & self.stack.pop())
@@ -212,7 +210,3 @@ class OpCodes:
 
 # classy = ClassFile()
 # classy.print_self()
-=======
-classy = ClassFile()
-classy.print_self()
->>>>>>> fdc79b9d3670b02c2fc560ad0e8d9b179993adb5
