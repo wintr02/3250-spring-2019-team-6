@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import mock_open, patch
-from ClassFile import OpCodes
+from jvpm.ClassFile import OpCodes
 
 
 class TestOpCodes(unittest.TestCase):
