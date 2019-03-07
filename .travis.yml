@@ -20,6 +20,6 @@ after_success:
 - codecov
 addons:
   sonarcloud:
-    organization: rykonermana-github
+    organization: wintr02-github
     token:
-      secure: 13308ec43645784128eec48e3fcc8035a67a592f
+      secure: *********
