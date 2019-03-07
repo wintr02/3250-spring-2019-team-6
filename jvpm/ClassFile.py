@@ -19,10 +19,10 @@ class ClassFile:
             # self.cp_and_ic = self.interface_count + self.constant_pool
             # self.interface_table = self.get_interface_table()
             # self.field_count = self.get_field_count()
-            self.cp_ic_fc = 224 #  = self.cp_and_ic + self.field_count
+            #self.cp_ic_fc = 224 #  = self.cp_and_ic + self.field_count
             # self.field_table = self.get_field_table()
-            self.method_count = self.get_method_count()
-            self.method_table = self.get_method_table()
+            #self.method_count = self.get_method_count()
+            #self.method_table = self.get_method_table()
             #self.cp_ic_fc_mc = self.cp_ic_fc + len(self.method_table)
             # self.attribute_count = self.get_attribute_count()
             # self.attribute_table = self.get_attribute_table()
@@ -122,15 +122,15 @@ class ClassFile:
 #     ClassFile()
 
 class OpCodes:
-    def __init__(self,opcodes):
+    def __init__(self):
         self.table = self.load() #{0x00: self.not_implemented} #TODO read in table with opcodes
         self.stack = []
-        self.opcodes = opcodes
-        self.run()
+        #self.opcodes = opcodes
+        #self.run()
 
     def load(self):
 	    dict1 = {}
-	    with open('int_opcodes.csv', 'r') as csvfile:
+	    with open('jvpm/int_opcodes.csv', 'r') as csvfile:
 		    spamreader = csv.DictReader(csvfile)
 		    for x in list(spamreader):
 			    the_number = int(x['opcode'].strip(),16)
@@ -143,7 +143,7 @@ class OpCodes:
             method = self.interpret(i)
             #print("running method", method, "...")
             #print("finished method", method, "...")
-            test = input()
+            #test = input()
 
 
     def not_implemented(self):
@@ -233,6 +233,6 @@ class OpCodes:
     def ixor(self):
         self.stack.append(self.stack.pop() ^ self.stack.pop())
 
-classy = ClassFile()
-classy.print_self()
-classy.run_opcodes()
+#classy = ClassFile()
+#classy.print_self()
+#classy.run_opcodes()
