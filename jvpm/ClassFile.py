@@ -1,9 +1,9 @@
 import unittest
+import csv
 # unittest
 
-
 class ClassFile:
-    def __init__(self, file='jvpm/test2.class'):
+    def __init__(self, file='test/JavaTestStuff2.class'):
         with open(file, 'rb') as binary_file:
             # the byte string being stored in self.data to be parsed
             self.data = binary_file.read()
@@ -19,12 +19,11 @@ class ClassFile:
             # self.cp_and_ic = self.interface_count + self.constant_pool
             # self.interface_table = self.get_interface_table()
             # self.field_count = self.get_field_count()
-            #self.cp_ic_fc = 207  = self.cp_and_ic + self.field_count
+            self.cp_ic_fc = 224 #  = self.cp_and_ic + self.field_count
             # self.field_table = self.get_field_table()
-            #self.method_count = self.get_method_count()
-            #self.method_table = self.get_method_table()
+            self.method_count = self.get_method_count()
+            self.method_table = self.get_method_table()
             #self.cp_ic_fc_mc = self.cp_ic_fc + len(self.method_table)
-
             # self.attribute_count = self.get_attribute_count()
             # self.attribute_table = self.get_attribute_table()
 
@@ -81,7 +80,6 @@ class ClassFile:
 
     def get_method_table(self):
         method = self.data[22+self.cp_ic_fc:22+self.cp_ic_fc+self.method_count]
-
         return method
     #
     # def get_attribute_count(self):
@@ -95,7 +93,7 @@ class ClassFile:
     #
     def print_self(self):
     #     print(self)
-    #     print("Magic: ", self.magic)
+        print("Magic: ", self.magic)
     #     print("Minor version: ", self.minor)
     #     print("Major version: ", self.major)
     #     print("Constant pool: ", self.constant_pool)
@@ -109,30 +107,57 @@ class ClassFile:
     #     print("Field count: ", self.field_count)
     #     print("Cp + Ic + fc: ", self.cp_ic_fc)
     #     print("Field table: ", "[%s]" % ", ".join(map(str, self.field_table)))
-    #     print("Method count: ", self.method_count)
+        print("Method count: ", self.method_count)
     #     print("Cp + IC + Fc + Mc: ", self.cp_ic_fc_mc)
-        print("Method table: ",''.join("%02x"%i for i in self.method_table))
+        print("Opcode table: ",''.join("%02x, "%i for i in self.method_table))
     #     print("Attribute count: ", self.attribute_count)
     #     print("Attribute table: ", "[%s]" % ", ".join(map(str, self.attribute_table)))
+	
+    def run_opcodes(self):
+        opcodes = OpCodes(self.method_table)
+        opcodes.run()
 
 #
 # if '__main__' == __name__:
 #     ClassFile()
 
-
 class OpCodes:
-    def __init__(self):
-        self.table = {0x00: self.not_implemented}
+    def __init__(self,opcodes):
+        self.table = self.load() #{0x00: self.not_implemented} #TODO read in table with opcodes
         self.stack = []
+        self.opcodes = opcodes
+        self.run()
+
+    def load(self):
+	    dict1 = {}
+	    with open('int_opcodes.csv', 'r') as csvfile:
+		    spamreader = csv.DictReader(csvfile)
+		    for x in list(spamreader):
+			    the_number = int(x['opcode'].strip(),16)
+			    dict1[the_number]=x['name'].strip()
+	    return dict1
+
+    def run(self):
+        for i in self.opcodes:
+            print("stack: ", self.stack)
+            method = self.interpret(i)
+            #print("running method", method, "...")
+            #print("finished method", method, "...")
+            test = input()
+
 
     def not_implemented(self):
         return 'not implemented'
 
     def interpret(self, value):
-        return self.table[value]()
+        print("running method: ", self.table[value])
+        getattr(self, self.table[value])()
+        return self.table[value]
+		
     #adds top two operands in the stack and returns the value
     def iadd(self):
         self.stack.append(self.stack.pop() + self.stack.pop())
+		
     #Compares top two integer bits in the stack and returns the AND result
     def iand(self):
         self.stack.append(self.stack.pop() & self.stack.pop())
@@ -208,5 +233,6 @@ class OpCodes:
     def ixor(self):
         self.stack.append(self.stack.pop() ^ self.stack.pop())
 
-# classy = ClassFile()
-# classy.print_self()
+classy = ClassFile()
+classy.print_self()
+classy.run_opcodes()
