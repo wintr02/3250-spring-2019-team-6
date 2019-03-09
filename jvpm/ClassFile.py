@@ -10,7 +10,7 @@ class ClassFile:
             self.magic = self.get_magic()
             self.minor = self.get_minor()
             self.major = self.get_major()
-            # self.constant_pool = self.get_constant_pool()
+            self.constant_pool = self.get_constant_pool()
             # self.constant_table =  self.get_constant_pool_table()
             # self.access_flags = self.get_access_flags()
             # self.this_class = self.get_this_class()
@@ -19,10 +19,10 @@ class ClassFile:
             # self.cp_and_ic = self.interface_count + self.constant_pool
             # self.interface_table = self.get_interface_table()
             # self.field_count = self.get_field_count()
-            #self.cp_ic_fc = 224 #  = self.cp_and_ic + self.field_count
+            # self.cp_ic_fc = 224 #  = self.cp_and_ic + self.field_count
             # self.field_table = self.get_field_table()
-            #self.method_count = self.get_method_count()
-            #self.method_table = self.get_method_table()
+            # self.method_count = self.get_method_count()
+            # self.method_table = self.get_method_table()
             #self.cp_ic_fc_mc = self.cp_ic_fc + len(self.method_table)
             # self.attribute_count = self.get_attribute_count()
             # self.attribute_table = self.get_attribute_table()
@@ -94,10 +94,9 @@ class ClassFile:
     def print_self(self):
     #     print(self)
         print("Magic: ", self.magic)
-    #     print("Minor version: ", self.minor)
-    #     print("Major version: ", self.major)
-    #     print("Constant pool: ", self.constant_pool)
-    #     print("Constant pool: ", self.constant_pool)
+        print("Minor version: ", self.minor)
+        print("Major version: ", self.major)
+        print("Constant pool: ", self.constant_pool)
     #     print("Constant table: ", "[%s]" % ", ".join(map(str, self.constant_table)))
     #     print("Access flags: ", hex(self.access_flags[0]), hex(self.access_flags[1]))
     #     print("This class: ", self.this_class)
@@ -107,9 +106,9 @@ class ClassFile:
     #     print("Field count: ", self.field_count)
     #     print("Cp + Ic + fc: ", self.cp_ic_fc)
     #     print("Field table: ", "[%s]" % ", ".join(map(str, self.field_table)))
-        print("Method count: ", self.method_count)
+    #    print("Method count: ", self.method_count)
     #     print("Cp + IC + Fc + Mc: ", self.cp_ic_fc_mc)
-        print("Opcode table: ",''.join("%02x, "%i for i in self.method_table))
+    #    print("Opcode table: ",''.join("%02x, "%i for i in self.method_table))
     #     print("Attribute count: ", self.attribute_count)
     #     print("Attribute table: ", "[%s]" % ", ".join(map(str, self.attribute_table)))
 	
@@ -122,10 +121,10 @@ class ClassFile:
 #     ClassFile()
 
 class OpCodes:
-    def __init__(self):
+    def __init__(self,opcodes=[]):
         self.table = self.load() #{0x00: self.not_implemented} #TODO read in table with opcodes
         self.stack = []
-        #self.opcodes = opcodes
+        self.opcodes = opcodes
         #self.run()
 
     def load(self):
@@ -138,13 +137,12 @@ class OpCodes:
 	    return dict1
 
     def run(self):
-        for i in self.opcodes:
+        for _ in self.opcodes:
             print("stack: ", self.stack)
-            method = self.interpret(i)
+            #method = self.interpret(i)
             #print("running method", method, "...")
             #print("finished method", method, "...")
             #test = input()
-
 
     def not_implemented(self):
         return 'not implemented'
@@ -153,86 +151,88 @@ class OpCodes:
         print("running method: ", self.table[value])
         getattr(self, self.table[value])()
         return self.table[value]
-		
+
+    def push_int_to_stack(self,value):
+        if(value>2147483647 or value<-2147483648):
+            raise ValueError()
+        else:
+            self.stack.append(value)
+
     #adds top two operands in the stack and returns the value
     def iadd(self):
-        self.stack.append(self.stack.pop() + self.stack.pop())
+        self.push_int_to_stack(self.stack.pop() + self.stack.pop())
 		
     #Compares top two integer bits in the stack and returns the AND result
     def iand(self):
-        self.stack.append(self.stack.pop() & self.stack.pop())
+        self.push_int_to_stack(self.stack.pop() & self.stack.pop())
 
     #Pushes -1 onto the stack
     def iconst_m1(self):
-        self.stack.append(-1)
+        self.push_int_to_stack(-1)
 
     #Pushes 0 onto the stack
     def iconst_0(self):
-        self.stack.append(0)
+        self.push_int_to_stack(0)
 
     #Pushes 1 onto the stack
     def iconst_1(self):
-        self.stack.append(1)
+        self.push_int_to_stack(1)
 
     #Pushes 2 onto the stack
     def iconst_2(self):
-        self.stack.append(2)
+        self.push_int_to_stack(2)
 
     #Pushes 3 onto the stack
     def iconst_3(self):
-        self.stack.append(3)
+        self.push_int_to_stack(3)
 
     #Pushes 4 onto the stack
     def iconst_4(self):
-        self.stack.append(4)
+        self.push_int_to_stack(4)
 
     #Pushes 5 onto the stack
     def iconst_5(self):
-        self.stack.append(5)
+        self.push_int_to_stack(5)
 
     #Divides top two integers on the stack and pushes the integer answer
     def idiv(self):
-        self.stack.append(self.stack.pop()//self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()//self.stack.pop())
 
     #Multiplies top two integers on the stack and pushes the result to the stack
     def imul(self):
-        self.stack.append(self.stack.pop()*self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()*self.stack.pop())
 
     #Pushes the next integer on the stack *-1
     def ineg(self):
-        self.stack.append(self.stack.pop() * (-1))
+        self.push_int_to_stack(self.stack.pop() * (-1))
 
     #Pushes bitwise int OR into the stack of the top two integers
     def ior(self):
-        self.stack.append(self.stack.pop()|self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()|self.stack.pop())
 
     #Pushes the remainder of the division of the top two integers in the stack
     def irem(self):
-        self.stack.append(self.stack.pop()%self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()%self.stack.pop())
 
     #Pushes the next integer on the stack back onto it after it was shifted left by the amount
     #of the the second integer on the stack
     def ishl(self):
-        self.stack.append(self.stack.pop()<<self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()<<self.stack.pop())
 
     #Pushes the next integer on the stack back onto it after it was arithmetically shifted right by the amount
     #of the the second integer on the stack
     def ishr(self):
-        self.stack.append(self.stack.pop()>>self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()>>self.stack.pop())
 
     #Pushes the result of the top two integers of the stack back onto the stack
     def isub(self):
-        self.stack.append(self.stack.pop()-self.stack.pop())
+        self.push_int_to_stack(self.stack.pop()-self.stack.pop())
 
     #Pushes the next integer on the stack back onto it after it was logically shifted right by the amount
     #of the the second integer on the stack
     def iushr(self):
-        self.stack.append((self.stack.pop() % 0x100000000) >> self.stack.pop())#needs testing
+        self.push_int_to_stack((self.stack.pop() % 0x100000000) >> self.stack.pop())#needs testing
 
     #Pushes the exclusive OR result of the top two integers of the stack back onto the stack
     def ixor(self):
-        self.stack.append(self.stack.pop() ^ self.stack.pop())
-
-#classy = ClassFile()
-#classy.print_self()
-#classy.run_opcodes()
+        self.push_int_to_stack(self.stack.pop() ^ self.stack.pop())

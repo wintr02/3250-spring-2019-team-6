@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import mock_open, patch
+from unittest.mock import MagicMock
 from jvpm.ClassFile import OpCodes
 
 
@@ -14,6 +15,20 @@ class TestOpCodes(unittest.TestCase):
 	    testiadd.stack.append(2)
 	    testiadd.iadd()
 	    self.assertEqual(testiadd.stack.pop(), 4)
+    def test_int_overflow_positive(self):
+        testiadd = OpCodes()
+        self.assertRaises(ValueError,testiadd.push_int_to_stack, 2147483648)
+    def test_int_overflow_negative(self):
+        testiadd = OpCodes()
+        self.assertRaises(ValueError,testiadd.push_int_to_stack, -2147483649)
+    def test_int_max_positive(self):
+        testop = OpCodes()
+        testop.push_int_to_stack(2147483647)
+        self.assertEqual(testop.stack.pop(),2147483647)
+    def test_int_min_negative(self):
+        testop = OpCodes()
+        testop.push_int_to_stack(-2147483648)
+        self.assertEqual(testop.stack.pop(),-2147483648)
     def test_iand_simple(self):
 	    testiand = OpCodes()
 	    testiand.stack.append(5)
