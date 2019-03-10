@@ -233,6 +233,11 @@ class OpCodes:
     def ixor(self):
         self.stack.append(self.stack.pop() ^ self.stack.pop())
 
+    def invokeVirtual(self):
+	    self.indexbyte1 = 
+		# The first byte after OpCode (byte is number of args each put onto variable array and index 0 is the ObjectRef/this. for the method being invoked)
+		self.indexbyte2 =
+		# The second byte after the OpCode (Is the index of the constant pool that refers to the method being invoked)
 #classy = ClassFile()
 #classy.print_self()
 #classy.run_opcodes()
