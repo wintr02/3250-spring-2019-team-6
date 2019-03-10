@@ -1,5 +1,6 @@
 import unittest
 import csv
+import struct
 # unittest
 
 class ClassFile:
@@ -10,13 +11,14 @@ class ClassFile:
             self.magic = self.get_magic()
             self.minor = self.get_minor()
             self.major = self.get_major()
-            self.constant_pool = self.get_constant_pool()
-            # self.constant_table =  self.get_constant_pool_table()
+            self.constant_pool_count = self.get_constant_pool()-1
+            self.constant_pool_helper = self.load_constant_helper()
+            self.constant_table, self.constant_pool_length =  self.get_constant_pool_table()
             # self.access_flags = self.get_access_flags()
             # self.this_class = self.get_this_class()
             # self.superclass = self.get_super_class()
             # self.interface_count = self.get_interface_count()
-            # self.cp_and_ic = self.interface_count + self.constant_pool
+            # self.cp_and_ic = self.interface_count + self.constant_table['length']
             # self.interface_table = self.get_interface_table()
             # self.field_count = self.get_field_count()
             # self.cp_ic_fc = 224 #  = self.cp_and_ic + self.field_count
@@ -26,6 +28,19 @@ class ClassFile:
             #self.cp_ic_fc_mc = self.cp_ic_fc + len(self.method_table)
             # self.attribute_count = self.get_attribute_count()
             # self.attribute_table = self.get_attribute_table()
+
+    def load_constant_helper(self):
+        dict_variable_length = {}
+        with open('jvpm/files/constant_codes.csv', 'r') as csvfile:
+            spamreader = csv.DictReader(csvfile)
+            for x in list(spamreader):
+                constant_info = {}
+                constant_info['num_initial_bytes'] = int(x['Additional bytes'].strip())
+                constant_info['variable_length']=bool(int(x['Variable Length'].strip()))
+                constant_info['description']=x['Description'].strip()
+                the_number = int(x['Tag byte'].strip(),10)
+                dict_variable_length[the_number]=constant_info
+        return dict_variable_length
 
     def get_magic(self):
         magic = ""
@@ -42,11 +57,28 @@ class ClassFile:
     def get_constant_pool(self):
         return self.data[8] + self.data[9]
 
-    # def get_constant_pool_table(self):
-    #     constant = self.data[10:(10+self.constant_pool)]
-    #     # for i in range(self.constant_pool):
-    #     #    constant += format(self.data[i + 10], '02X')
-    #     return constant
+    def get_constant_pool_table(self):
+        #constant = self.data[10:(10+self.constant_pool)]
+        the_table = {}
+        active_position=10
+        for i in range(1,self.constant_pool_count+1):
+            dict_constant={}
+            constant_code=0
+            for j in self.data[active_position:active_position+1]:
+                constant_code+= j
+            #print("Constant code: ", constant_code)
+            active_position+=1
+            dict_constant['constant_code']=constant_code
+            message_length=int(self.constant_pool_helper[constant_code]['num_initial_bytes'])
+            dict_constant['message']=self.data[active_position:active_position+message_length]
+            active_position+=message_length
+            if(self.constant_pool_helper[constant_code]['variable_length']):
+                value_length=int(dict_constant['message'][0]) + int(dict_constant['message'][1])
+                dict_constant['value']=self.data[active_position:active_position+value_length]
+                active_position+=value_length
+            #print(dict_constant)
+            the_table[i] = dict_constant
+        return the_table, (active_position - 10)
     #
     # def get_access_flags(self):
     #     return self.data[10 + self.constant_pool-1:11 + self.constant_pool]
@@ -96,8 +128,10 @@ class ClassFile:
         print("Magic: ", self.magic)
         print("Minor version: ", self.minor)
         print("Major version: ", self.major)
-        print("Constant pool: ", self.constant_pool)
-    #     print("Constant table: ", "[%s]" % ", ".join(map(str, self.constant_table)))
+        print("Constant pool count: ", self.constant_pool_count)
+    #    print("Constant pool helper: ", self.constant_pool_helper)
+        print("Constant pool table: ", self.constant_table)
+        print("Constant pool byte length: ", self.constant_pool_length)
     #     print("Access flags: ", hex(self.access_flags[0]), hex(self.access_flags[1]))
     #     print("This class: ", self.this_class)
     #     print("Superclass: ", self.superclass)
@@ -129,7 +163,7 @@ class OpCodes:
 
     def load(self):
 	    dict1 = {}
-	    with open('jvpm/int_opcodes.csv', 'r') as csvfile:
+	    with open('jvpm/files/int_opcodes.csv', 'r') as csvfile:
 		    spamreader = csv.DictReader(csvfile)
 		    for x in list(spamreader):
 			    the_number = int(x['opcode'].strip(),16)
