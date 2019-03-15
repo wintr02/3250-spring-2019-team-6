@@ -233,11 +233,21 @@ class OpCodes:
     def ixor(self):
         self.stack.append(self.stack.pop() ^ self.stack.pop())
 
-    def invokeVirtual(self):
-	    self.indexbyte1 = 
-		# The first byte after OpCode (byte is number of args each put onto variable array and index 0 is the ObjectRef/this. for the method being invoked)
-		self.indexbyte2 =
-		# The second byte after the OpCode (Is the index of the constant pool that refers to the method being invoked)
+    def invokeVirtual(self, methodRef, cpValue):
+	# From what I undersand it starts off by getting the methodRef from cp which it uses the tag bytes of that MethodRef
+	# to get to Class and NameAndType from the constant pool, it uses the tag bytes from class to get a utf 8 that gives it the 
+	# object refrence which is placed at the bottom of that frames stack. It then uses the tag bytes from NameAndType
+	# which are two indexes in the cp that point towards two utf8's that give the value and type such as I() and 7 which are args to be 
+    # pushed onto the stack and all of this is brought together at runtime to create println statements and push statements	- Christian
+        if (methodRef == "java/util/Stack.push:(Ljava/lang/Object;)Ljava/lang/Object")
+		     self.stack.append(cp[cpValue])
+		elif (methodRef == "java/io/PrintStream.println:(I)V")
+		     print(int(cp[cpvalue]))
+		elif (methodRef == "Method java/io/PrintStream.println:(D)V")
+		     print(long(cp[cpvalue]))
+		elif (methodRef == "java/io/PrintStream.println:(Ljava/lang/String;)V")
+		     print(cp[cpValue])
+
 #classy = ClassFile()
 #classy.print_self()
 #classy.run_opcodes()
