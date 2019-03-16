@@ -107,3 +107,16 @@ class TestOpCodes(unittest.TestCase):
 	    test10.stack.append(3)   # Pushes X onto the stack
 	    test10.ixor()            # Pops first two operands off stack and pushes X XOR Y
 	    self.assertEqual(test10.stack.pop(), 4) # Tests for correct answer of XOR
+    def test_invokeVirtual(self):
+	    test11 = OpCodes()
+	    test11.stack.append(7)
+	    self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(I)V"), '7')
+	    test11.stack.append(4.321)
+	    self.assertEqual(test11.invokeVirtual("Method java/io/PrintStream.println:(D)V"), '4.321')
+	    test11.stack.append(1)
+	    self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Z)V"), 'true')
+	    test11.stack.append(0)
+	    self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Z)V"), 'false')
+	    test11.stack.append("HelloWorld")
+	    self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Ljava/lang/String;)V"), 'HelloWorld')
+	    self.assertEqual(test11.invokeVirtual("java/util/Stack.push:(Ljava/lang/Object;)Ljava/lang/Object"), 'not implemented')
