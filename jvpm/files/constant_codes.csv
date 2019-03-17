@@ -1,0 +1,18 @@
+Tag byte,Additional bytes,Variable Length,Description
+1,2,1,utf8
+3,4,0,Integer
+4,4,0,Float
+5,8,0,Long
+6,8,0,Double
+7,2,0,Class
+8,2,0,String
+9,4,0,Fieldref
+10,4,0,Methodref
+11,4,0,InterfaceMethodReference
+12,4,0,NameAndType
+15,3,0,MethodHandle
+16,2,0,MethodType
+17,4,0,Dynamic
+18,4,0,InvokeDyname
+19,2,0,Module
+20,2,0,Package
