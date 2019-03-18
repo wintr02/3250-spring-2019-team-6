@@ -233,6 +233,39 @@ class OpCodes:
     def ixor(self):
         self.stack.append(self.stack.pop() ^ self.stack.pop())
 
+    def i2b(self):
+        self.stack.append(self.stack.pop().to_bytes(length = 1, byteorder = 'big', signed = True))
+
+    def i2c(self):
+        #self.stack.append(self.stack.pop().char(c))
+        self.stack.append(chr(self.stack.pop()))
+
+    def i2d(self):
+        self.stack.append(self.stack.pop()/1.0)
+
+    def i2f(self):
+        self.stack.append(self.stack.pop()/1.0)
+
+    def i2l(self):
+        max = 2 ** 64 - 1
+        min = -2 ** 64
+        value = self.stack.pop()
+        if value >= min and value <= max:
+            self.stack.append(value / 1.0)
+        else:
+            raise ValueError("Value {} cannot be converted to long".format(value))
+
+
+    def i2s(self):
+        max = 2**16-1
+        min = -2**16
+        value = self.stack.pop()
+        if value >= min and value <= max:
+            self.stack.append(value/1.0)
+        else:
+            raise ValueError("Value {} cannot be converted to short".format(value))
+
+
 #classy = ClassFile()
 #classy.print_self()
 #classy.run_opcodes()
