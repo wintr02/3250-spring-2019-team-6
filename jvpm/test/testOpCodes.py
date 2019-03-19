@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import mock_open, patch
+from unittest.mock import MagicMock
 from jvpm.ClassFile import OpCodes
 
 
@@ -9,11 +10,25 @@ class TestOpCodes(unittest.TestCase):
     #    with self.assertRaises(KeyError):
     #        OpCodes().interpret(1)
     def test_iadd_simple(self):
+	      testiadd = OpCodes()
+	      testiadd.stack.append(2)
+	      testiadd.stack.append(2)
+	      testiadd.iadd()
+	      self.assertEqual(testiadd.stack.pop(), 4)
+    def test_int_overflow_positive(self):
         testiadd = OpCodes()
-        testiadd.stack.append(2)
-        testiadd.stack.append(2)
-        testiadd.iadd()
-        self.assertEqual(testiadd.stack.pop(), 4)
+        self.assertRaises(ValueError,testiadd.push_int_to_stack, 2147483648)
+    def test_int_overflow_negative(self):
+        testiadd = OpCodes()
+        self.assertRaises(ValueError,testiadd.push_int_to_stack, -2147483649)
+    def test_int_max_positive(self):
+        testop = OpCodes()
+        testop.push_int_to_stack(2147483647)
+        self.assertEqual(testop.stack.pop(),2147483647)
+    def test_int_min_negative(self):
+        testop = OpCodes()
+        testop.push_int_to_stack(-2147483648)
+        self.assertEqual(testop.stack.pop(),-2147483648)
     def test_iand_simple(self):
         testiand = OpCodes()
         testiand.stack.append(5)
@@ -102,11 +117,24 @@ class TestOpCodes(unittest.TestCase):
         #test9.stack.append(8)    # Pushes X onto the stack
         #test9.ishr()             # Pops first two operands off stack and pushes X*2^(-Y)
     def test_ixor_simple(self):
-        test10 = OpCodes()
-        test10.stack.append(7)   # Pushes Y onto the stack
-        test10.stack.append(3)   # Pushes X onto the stack
-        test10.ixor()            # Pops first two operands off stack and pushes X XOR Y
-        self.assertEqual(test10.stack.pop(), 4) # Tests for correct answer of XOR
+	      test10 = OpCodes()
+	      test10.stack.append(7)   # Pushes Y onto the stack
+	      test10.stack.append(3)   # Pushes X onto the stack
+	      test10.ixor()            # Pops first two operands off stack and pushes X XOR Y
+	      self.assertEqual(test10.stack.pop(), 4) # Tests for correct answer of XOR
+    def test_invokeVirtual(self):
+	      test11 = OpCodes()
+	      test11.stack.append(7)
+	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(I)V"), '7')
+	      test11.stack.append(4.321)
+	      self.assertEqual(test11.invokeVirtual("Method java/io/PrintStream.println:(D)V"), '4.321')
+	      test11.stack.append(1)
+	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Z)V"), 'true')
+	      test11.stack.append(0)
+	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Z)V"), 'false')
+	      test11.stack.append("HelloWorld")
+	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Ljava/lang/String;)V"), 'HelloWorld')
+	      self.assertEqual(test11.invokeVirtual("java/util/Stack.push:(Ljava/lang/Object;)Ljava/lang/Object"), 'not implemented')
     def test_i2b_simple(self):
         test = OpCodes()
         test.stack.append(-128)
@@ -125,13 +153,11 @@ class TestOpCodes(unittest.TestCase):
         test = OpCodes()
         test.stack.append(-129)
         self.assertRaises(OverflowError,test.i2b)
-
     def test_i2c_simpletest(self):
         test = OpCodes()
         test.stack.append(0)
         test.i2c()
         self.assertEqual(test.stack.pop(), '\x00')
-
     def test_i2c_simpletest2(self):
         test = OpCodes()
         test.stack.append(127)
@@ -152,7 +178,6 @@ class TestOpCodes(unittest.TestCase):
         test.stack.append(128)
         test.i2c()
         self.assertEqual(test.stack.pop(), '\x80')
-
     def test_i2d_simpletest(self):
         test = OpCodes()
         test.stack.append(2**63-1)
@@ -163,8 +188,6 @@ class TestOpCodes(unittest.TestCase):
         test.stack.append(-2**63)
         test.i2f()
         self.assertTrue(isinstance(test.stack.pop(), float))
-
-
     def test_i2f_simpletest(self):
         test = OpCodes()
         test.stack.append(2**31-1)
@@ -175,25 +198,19 @@ class TestOpCodes(unittest.TestCase):
         test.stack.append(-2**31)
         test.i2f()
         self.assertTrue(isinstance(test.stack.pop(), float))
-
-
     def test_i2s_valueTooLarge(self):
         test = OpCodes()
         test.stack.append(2**16)
         self.assertRaises(ValueError, test.i2s(test.stack.pop()))
-
     def test_i2s_valueTooLarge(self):
         test = OpCodes()
         test.stack.append(-2**16-1)
         self.assertRaises(ValueError, test.i2s)
-
     def test_i2l_valueTooLarge(self):
         test = OpCodes()
         test.stack.append(2**64)
         self.assertRaises(ValueError, test.i2l(test.stack.pop()))
-
     def test_i2l_valueTooLarge(self):
         test = OpCodes()
         test.stack.append(-2**64-1)
         self.assertRaises(ValueError, test.i2l)
-
