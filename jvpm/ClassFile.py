@@ -1,6 +1,7 @@
 import unittest
 import csv
 import struct
+import array
 # unittest
 
 class ClassFile:
@@ -154,7 +155,12 @@ class ClassFile:
 # if '__main__' == __name__:
 #     ClassFile()
 
+class LocalVar:
+    def __init__(self, localvar=[]):
+        self.localvar = localvar
+
 class OpCodes:
+    
     def __init__(self,opcodes=[]):
         self.table = self.load() #{0x00: self.not_implemented} #TODO read in table with opcodes
         self.stack = []
@@ -270,3 +276,18 @@ class OpCodes:
     #Pushes the exclusive OR result of the top two integers of the stack back onto the stack
     def ixor(self):
         self.push_int_to_stack(self.stack.pop() ^ self.stack.pop())
+
+    def iload(self, value):
+        stack.push(value)
+
+    def iload_0(self, localvar):
+        stack.push(localvar[0])
+
+    def iload_1(self, localvar):
+        stack.push(localvar[1])
+
+    def iload_2(self, localvar):
+        stack.push(localvar[2])
+
+    def iload_3(self, localvar):
+        stack.push(localvar[3])
