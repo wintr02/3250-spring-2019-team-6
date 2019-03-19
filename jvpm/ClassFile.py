@@ -1,6 +1,7 @@
 import unittest
 import csv
 import struct
+import array
 # unittest
 
 class ClassFile:
@@ -9,7 +10,7 @@ class ClassFile:
             # the byte string being stored in self.data to be parsed
             self.data = binary_file.read()
             self.magic = self.get_magic()
-            self.minor = self.get_minor()
+            self.minor = self.get_minor()s
             self.major = self.get_major()
             self.constant_pool_count = self.get_constant_pool()-1
             self.constant_pool_helper = self.load_constant_helper()
@@ -145,7 +146,7 @@ class ClassFile:
     #    print("Opcode table: ",''.join("%02x, "%i for i in self.method_table))
     #     print("Attribute count: ", self.attribute_count)
     #     print("Attribute table: ", "[%s]" % ", ".join(map(str, self.attribute_table)))
-	
+
     def run_opcodes(self):
         opcodes = OpCodes(self.method_table)
         opcodes.run()
@@ -154,10 +155,17 @@ class ClassFile:
 # if '__main__' == __name__:
 #     ClassFile()
 
+'''class LocalVar:
+    def __init__(self, localvar=[]):
+        self.localvar = localvar
+'''
+
 class OpCodes:
+
     def __init__(self,opcodes=[]):
         self.table = self.load() #{0x00: self.not_implemented} #TODO read in table with opcodes
         self.stack = []
+        self.localvar = []
         self.opcodes = opcodes
         #self.run()
 
@@ -195,7 +203,7 @@ class OpCodes:
     #adds top two operands in the stack and returns the value
     def iadd(self):
         self.push_int_to_stack(self.stack.pop() + self.stack.pop())
-		
+
     #Compares top two integer bits in the stack and returns the AND result
     def iand(self):
         self.push_int_to_stack(self.stack.pop() & self.stack.pop())
@@ -271,6 +279,46 @@ class OpCodes:
     def ixor(self):
         self.push_int_to_stack(self.stack.pop() ^ self.stack.pop())
 
+    #Load specified integer value onto the operand stack
+    def iload(self, value):
+        self.stack.push(value)
+
+    #Load integer value in localvar list at index 0 to operand stack
+    def iload_0(self):
+        self.stack.push(self.localvar[0])
+
+    #Load integer value in localvar list at index 1 to operand stack
+    def iload_1(self):
+        self.stack.push(self.localvar[1])
+
+    #Load integer value in localvar list at index 2 to operand stack
+    def iload_2(self):
+        self.stack.push(self.localvar[2])
+
+    #Load integer value in localvar list at index 3 to operand stack
+    def iload_3(self):
+        self.stack.push(self.localvar[3])
+
+    #Store specified integer value into localvar list at index 0
+    def istore(self, value):
+        self.localvar[0] = value
+
+    #Store integer value on operand stack to localvar list at index 1
+    def istore_1(self):
+        self.localvar[1] = self.stack.pop()
+
+    #Store integer value on operand stack to localvar list at index 2
+    def istore_2(self):
+        self.localvar[2] = self.stack.pop()
+
+    #Store integer value on operand stack to localvar list at index 3
+    def istore_3(self):
+        self.localvar[3] = self.stack.pop()
+
+    #Store integer value on operand stack to localvar list at index 4
+    def istore_4(self):
+        self.localvar[4] = self.stack.pop()
+
     def i2b(self):
         self.stack.append(self.stack.pop().to_bytes(length = 1, byteorder = 'big', signed = True))
 
@@ -302,7 +350,7 @@ class OpCodes:
         else:
             raise ValueError("Value {} cannot be converted to short".format(value))
 
-            
+
     def invokeVirtual(self, methodRef):
         if (methodRef == "java/io/PrintStream.println:(I)V"):
             print(int(self.stack.pop()))
