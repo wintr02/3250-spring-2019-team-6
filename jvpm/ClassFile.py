@@ -269,7 +269,7 @@ class OpCodes:
 
     #Pushes the exclusive OR result of the top two integers of the stack back onto the stack
     def ixor(self):
-        self.stack.append(self.stack.pop() ^ self.stack.pop())
+        self.push_int_to_stack(self.stack.pop() ^ self.stack.pop())
 
     def invokeVirtual(self, methodRef):
         if (methodRef == "java/io/PrintStream.println:(I)V"):
