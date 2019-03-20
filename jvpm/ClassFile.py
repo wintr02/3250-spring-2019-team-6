@@ -354,8 +354,8 @@ class OpCodes:
     def invokeVirtual(self, methodRef):
         if (methodRef == "java/io/PrintStream.println:(I)V"):
             return(int(self.stack.pop()))
-        elif (methodRef == "java/util/Stack.push:(Ljava/lang/Object;)Ljava/lang/Object"):
-            return self.stack.append(self.stack.pop())
+        #elif (methodRef == "java/util/Stack.push:(Ljava/lang/Object;)Ljava/lang/Object"):
+        #   return self.stack.append(self.stack.pop())
         elif (methodRef == "java/io/PrintStream.println:(Z)V"):
             x = self.stack.pop()
             if (x == 1):
@@ -364,9 +364,9 @@ class OpCodes:
                 return("false")
             else:
                 return("not a boolean")  # Case probably raises an exception not 'not a boolean' - Christian
-        elif (methodRef == "Method java/io/PrintStream.println:(D)V"):
-            return(long(self.stack.pop()))
+        #elif (methodRef == "Method java/io/PrintStream.println:(D)V"):
+        #    return(long(self.stack.pop()))
         elif (methodRef == "java/io/PrintStream.println:(Ljava/lang/String;)V"):
             return(self.stack.pop())
         else:
-            return("not implented")
+            return("not implemented")
