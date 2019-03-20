@@ -165,7 +165,7 @@ class OpCodes:
     def __init__(self,opcodes=[]):
         self.table = self.load() #{0x00: self.not_implemented} #TODO read in table with opcodes
         self.stack = []
-        self.localvar = []
+        self.localvar = [0]*10
         self.opcodes = opcodes
         #self.run()
 
@@ -280,44 +280,40 @@ class OpCodes:
         self.push_int_to_stack(self.stack.pop() ^ self.stack.pop())
 
     #Load specified integer value onto the operand stack
-    def iload(self, value):
-        self.stack.push(value)
+    def iload(self, index):
+        self.stack.append(self.localvar[index])
 
     #Load integer value in localvar list at index 0 to operand stack
-    def iload_0(self):
-        self.stack.push(self.localvar[0])
+    def iload_0(self, index):
+        self.stack.append(self.localvar[index])
 
     #Load integer value in localvar list at index 1 to operand stack
-    def iload_1(self):
-        self.stack.push(self.localvar[1])
+    def iload_1(self, index):
+        self.stack.append(self.localvar[index])
 
     #Load integer value in localvar list at index 2 to operand stack
-    def iload_2(self):
-        self.stack.push(self.localvar[2])
+    def iload_2(self, index):
+        self.stack.append(self.localvar[index])
 
     #Load integer value in localvar list at index 3 to operand stack
-    def iload_3(self):
-        self.stack.push(self.localvar[3])
+    def iload_3(self, index):
+        self.stack.append(self.localvar[index])
 
     #Store specified integer value into localvar list at index 0
-    def istore(self, value):
-        self.localvar[0] = value
+    def istore(self, index):
+        self.localvar[index] = self.stack.pop()
 
     #Store integer value on operand stack to localvar list at index 1
-    def istore_1(self):
-        self.localvar[1] = self.stack.pop()
+    def istore_1(self, index):
+        self.localvar[index] = self.stack.pop()
 
     #Store integer value on operand stack to localvar list at index 2
-    def istore_2(self):
-        self.localvar[2] = self.stack.pop()
+    def istore_2(self, index):
+        self.localvar[index] = self.stack.pop()
 
     #Store integer value on operand stack to localvar list at index 3
-    def istore_3(self):
-        self.localvar[3] = self.stack.pop()
-
-    #Store integer value on operand stack to localvar list at index 4
-    def istore_4(self):
-        self.localvar[4] = self.stack.pop()
+    def istore_3(self, index):
+        self.localvar[index] = self.stack.pop()
 
     def i2b(self):
         self.stack.append(self.stack.pop().to_bytes(length = 1, byteorder = 'big', signed = True))
