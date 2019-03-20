@@ -10,7 +10,7 @@ class ClassFile:
             # the byte string being stored in self.data to be parsed
             self.data = binary_file.read()
             self.magic = self.get_magic()
-            self.minor = self.get_minor()s
+            self.minor = self.get_minor()
             self.major = self.get_major()
             self.constant_pool_count = self.get_constant_pool()-1
             self.constant_pool_helper = self.load_constant_helper()
@@ -353,20 +353,20 @@ class OpCodes:
 
     def invokeVirtual(self, methodRef):
         if (methodRef == "java/io/PrintStream.println:(I)V"):
-            print(int(self.stack.pop()))
+            return(int(self.stack.pop()))
         elif (methodRef == "java/util/Stack.push:(Ljava/lang/Object;)Ljava/lang/Object"):
-            self.stack.append(self.stack.pop())
+            return self.stack.append(self.stack.pop())
         elif (methodRef == "java/io/PrintStream.println:(Z)V"):
             x = self.stack.pop()
             if (x == 1):
-                print("true")
+                return("true")
             elif (x == 0):
-                print("false")
+                return("false")
             else:
-                print("not a boolean")  # Case probably raises an exception not 'not a boolean' - Christian
+                return("not a boolean")  # Case probably raises an exception not 'not a boolean' - Christian
         elif (methodRef == "Method java/io/PrintStream.println:(D)V"):
-            print(long(self.stack.pop()))
+            return(long(self.stack.pop()))
         elif (methodRef == "java/io/PrintStream.println:(Ljava/lang/String;)V"):
-            print(self.stack.pop())
+            return(self.stack.pop())
         else:
-            print("not implented")
+            return("not implented")

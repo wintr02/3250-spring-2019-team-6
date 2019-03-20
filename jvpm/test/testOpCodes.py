@@ -125,9 +125,9 @@ class TestOpCodes(unittest.TestCase):
     def test_invokeVirtual(self):
 	      test11 = OpCodes()
 	      test11.stack.append(7)
-	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(I)V"), '7')
+	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(I)V"), 7)
 	      test11.stack.append(4.321)
-	      self.assertEqual(test11.invokeVirtual("Method java/io/PrintStream.println:(D)V"), '4.321')
+	      self.assertEqual(test11.invokeVirtual("Method java/io/PrintStream.println:(D)V"), 4.321)
 	      test11.stack.append(1)
 	      self.assertEqual(test11.invokeVirtual("java/io/PrintStream.println:(Z)V"), 'true')
 	      test11.stack.append(0)
