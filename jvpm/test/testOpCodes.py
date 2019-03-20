@@ -224,6 +224,11 @@ class TestOpCodes(unittest.TestCase):
         testiload1.localvar.insert(1, 8)
         testiload1.iload_1(1)
         self.assertEqual(testiload1.stack.pop(), 8)
+    def test_iload0_simple(self):
+        testiload0 = OpCodes()
+        testiload0.localvar.insert(0, 8)
+        testiload0.iload_0(0)
+        self.assertEqual(testiload0.stack.pop(), 8)
     def test_iload2_simple(self):
         testiload2 = OpCodes()
         testiload2.localvar.insert(2, 6)
@@ -239,6 +244,11 @@ class TestOpCodes(unittest.TestCase):
         testistore.stack.append(1)
         testistore.istore(0)
         self.assertEqual(testistore.localvar[0], 1)
+    def test_istore0_simple(self):
+        testistore0 = OpCodes()
+        testistore0.stack.append(5)
+        testistore0.istore_0(0)
+        self.assertEqual(testistore0.localvar[0], 5)
     def test_istore1_simple(self):
         testistore1 = OpCodes()
         testistore1.stack.append(5)

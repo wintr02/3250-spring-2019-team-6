@@ -126,13 +126,13 @@ class ClassFile:
     #
     def print_self(self):
     #     print(self)
-        print("Magic: ", self.magic)
-        print("Minor version: ", self.minor)
-        print("Major version: ", self.major)
-        print("Constant pool count: ", self.constant_pool_count)
+        print("Magic: ", self.magic) # pragma: no cover
+        print("Minor version: ", self.minor)  # pragma: no cover
+        print("Major version: ", self.major)  # pragma: no cover
+        print("Constant pool count: ", self.constant_pool_count)  # pragma: no cover
     #    print("Constant pool helper: ", self.constant_pool_helper)
-        print("Constant pool table: ", self.constant_table)
-        print("Constant pool byte length: ", self.constant_pool_length)
+        print("Constant pool table: ", self.constant_table)  # pragma: no cover
+        print("Constant pool byte length: ", self.constant_pool_length)  # pragma: no cover
     #     print("Access flags: ", hex(self.access_flags[0]), hex(self.access_flags[1]))
     #     print("This class: ", self.this_class)
     #     print("Superclass: ", self.superclass)
@@ -180,7 +180,7 @@ class OpCodes:
 
     def run(self):
         for _ in self.opcodes:
-            print("stack: ", self.stack)
+            print("stack: ", self.stack)  # pragma: no cover
             #method = self.interpret(i)
             #print("running method", method, "...")
             #print("finished method", method, "...")
@@ -190,7 +190,7 @@ class OpCodes:
         return 'not implemented'
 
     def interpret(self, value):
-        print("running method: ", self.table[value])
+        print("running method: ", self.table[value])  # pragma: no cover
         getattr(self, self.table[value])()
         return self.table[value]
 
@@ -301,6 +301,10 @@ class OpCodes:
 
     #Store specified integer value into localvar list at index 0
     def istore(self, index):
+        self.localvar[index] = self.stack.pop()
+
+    #Store specified integer value into localvar list at index 0
+    def istore_0(self, index):
         self.localvar[index] = self.stack.pop()
 
     #Store integer value on operand stack to localvar list at index 1
