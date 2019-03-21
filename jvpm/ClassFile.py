@@ -370,3 +370,9 @@ class OpCodes:
             return(self.stack.pop())
         else:
             return("not implemented")
+
+    def g(self):
+	g1 = 2
+	g2 = g1
+	sg = g1 + g2
+	print(sg)
